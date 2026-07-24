@@ -4,6 +4,7 @@ import com.linneakarlsson.budget_app_enterpise.dto.CustomUserPatchDTO;
 import com.linneakarlsson.budget_app_enterpise.dto.CustomUserRequestDTO;
 import com.linneakarlsson.budget_app_enterpise.dto.CustomUserResponseDTO;
 import com.linneakarlsson.budget_app_enterpise.model.CustomUser;
+import com.linneakarlsson.budget_app_enterpise.model.Role;
 import com.linneakarlsson.budget_app_enterpise.repository.CustomUserRepository;
 import com.linneakarlsson.budget_app_enterpise.util.PasswordUtil;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class CustomUserService {
         CustomUser user = new CustomUser();
         user.setEmail(dto.email());
         user.setPassword(PasswordUtil.hashPassword(dto.password()));
-        user.setRole("USER");
+        user.setRole(Role.USER);
         return customUserRepository.save(user);
     }
 
@@ -38,7 +39,7 @@ public class CustomUserService {
         CustomUser user = new CustomUser();
         user.setEmail(dto.email());
         user.setPassword(PasswordUtil.hashPassword(dto.password()));
-        user.setRole("ADMIN");
+        user.setRole(Role.ADMIN);
         return customUserRepository.save(user);
     }
 

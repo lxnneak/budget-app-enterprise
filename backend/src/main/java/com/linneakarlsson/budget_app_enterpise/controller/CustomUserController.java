@@ -4,6 +4,7 @@ import com.linneakarlsson.budget_app_enterpise.dto.CustomUserPatchDTO;
 import com.linneakarlsson.budget_app_enterpise.dto.CustomUserRequestDTO;
 import com.linneakarlsson.budget_app_enterpise.dto.CustomUserResponseDTO;
 import com.linneakarlsson.budget_app_enterpise.model.CustomUser;
+import com.linneakarlsson.budget_app_enterpise.model.Role;
 import com.linneakarlsson.budget_app_enterpise.service.AuthenticationService;
 import com.linneakarlsson.budget_app_enterpise.service.CustomUserService;
 import jakarta.validation.Valid;
@@ -48,7 +49,7 @@ public class CustomUserController {
             @RequestHeader String email,
             @RequestHeader String password) {
         CustomUser user = authenticationService.authenticateOrThrow(email, password);
-        if (!"ADMIN".equals(user.getRole())) {
+        if (!Role.ADMIN.equals(user.getRole())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         CustomUser savedAdmin = customUserService.createAdmin(dto);
@@ -61,7 +62,7 @@ public class CustomUserController {
             @RequestHeader String email,
             @RequestHeader String password) {
         CustomUser user = authenticationService.authenticateOrThrow(email, password);
-        if (!"ADMIN".equals(user.getRole())) {
+        if (!Role.ADMIN.equals(user.getRole())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         customUserService.deleteUser(id);
@@ -73,7 +74,7 @@ public class CustomUserController {
             @RequestHeader String email,
             @RequestHeader String password) {
         CustomUser user = authenticationService.authenticateOrThrow(email, password);
-        if (!"ADMIN".equals(user.getRole())) {
+        if (!Role.ADMIN.equals(user.getRole())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         List<CustomUserResponseDTO> users = customUserService.getAllUsers();

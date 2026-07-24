@@ -19,15 +19,16 @@ public class CustomUser {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private String role;
+    private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions;
 
     public CustomUser() {}
 
-    public CustomUser(String email, String password, String role, List<Transaction> transactions) {
+    public CustomUser(String email, String password, Role role, List<Transaction> transactions) {
         this.email = email;
         this.password = password;
         this.role = role;
@@ -42,8 +43,8 @@ public class CustomUser {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
 
     public CustomUserResponseDTO toDTO() {
         return new CustomUserResponseDTO(id, email, role);
