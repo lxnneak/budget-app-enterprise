@@ -1,8 +1,3 @@
-# Read Me First
-The following was discovered as part of building this project:
-
-* The original package name 'com.linneakarlsson.budget-app' is invalid and this project uses 'com.linneakarlsson.budget_app_enterpise' instead.
-
 # Getting Started
 
 ### Reference Documentation
