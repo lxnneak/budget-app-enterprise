@@ -1,6 +1,6 @@
 package com.linneakarlsson.budget_app_enterpise.service;
 
-import com.linneakarlsson.budget_app_enterpise.model.CustomUser;
+import com.linneakarlsson.budget_app_enterpise.model.customUser.CustomUser;
 import com.linneakarlsson.budget_app_enterpise.repository.CustomUserRepository;
 import com.linneakarlsson.budget_app_enterpise.util.PasswordUtil;
 import org.springframework.http.HttpStatus;

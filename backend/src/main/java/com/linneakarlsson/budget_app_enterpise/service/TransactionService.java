@@ -2,9 +2,9 @@ package com.linneakarlsson.budget_app_enterpise.service;
 
 import com.linneakarlsson.budget_app_enterpise.dto.TransactionRequestDTO;
 import com.linneakarlsson.budget_app_enterpise.dto.TransactionResponseDTO;
-import com.linneakarlsson.budget_app_enterpise.model.CustomUser;
-import com.linneakarlsson.budget_app_enterpise.model.Transaction;
-import com.linneakarlsson.budget_app_enterpise.model.TransactionType;
+import com.linneakarlsson.budget_app_enterpise.model.customUser.CustomUser;
+import com.linneakarlsson.budget_app_enterpise.model.transaction.Transaction;
+import com.linneakarlsson.budget_app_enterpise.model.transaction.TransactionType;
 import com.linneakarlsson.budget_app_enterpise.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 @Service
 public class TransactionService {
@@ -26,7 +27,7 @@ public class TransactionService {
         return repository.findByUserOrderByDateDesc(user).stream().map(t -> TransactionResponseDTO.toDTO(t)).toList();
     }
 
-    public TransactionResponseDTO getById(Long id, CustomUser user) {
+    public TransactionResponseDTO getById(UUID id, CustomUser user) {
         Transaction transaction = repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Transaction not found with id: " + id));
         if (!transaction.getUser().getId().equals(user.getId())) {
@@ -55,7 +56,7 @@ public class TransactionService {
         return TransactionResponseDTO.toDTO(repository.save(transaction));
     }
 
-    public TransactionResponseDTO update(Long id, TransactionRequestDTO request, CustomUser user) {
+    public TransactionResponseDTO update(UUID id, TransactionRequestDTO request, CustomUser user) {
         Transaction transaction = repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Transaction not found with id: " + id));
         if (!transaction.getUser().getId().equals(user.getId())) {
@@ -69,7 +70,7 @@ public class TransactionService {
         return TransactionResponseDTO.toDTO(repository.save(transaction));
     }
 
-    public void delete(Long id, CustomUser user) {
+    public void delete(UUID id, CustomUser user) {
         Transaction transaction = repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Transaction not found with id: " + id));
         if (!transaction.getUser().getId().equals(user.getId())) {

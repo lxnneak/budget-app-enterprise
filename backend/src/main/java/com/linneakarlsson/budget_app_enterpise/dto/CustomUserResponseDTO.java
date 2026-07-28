@@ -1,10 +1,13 @@
 package com.linneakarlsson.budget_app_enterpise.dto;
 
-import com.linneakarlsson.budget_app_enterpise.model.Role;
+import com.linneakarlsson.budget_app_enterpise.model.customUser.authority.UserRole;
+
+import java.util.Set;
+import java.util.UUID;
 
 public record CustomUserResponseDTO(
-        Long id,
+        UUID id,
         String email,
-        Role role
+        Set<UserRole> role
 ) {}
 

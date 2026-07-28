@@ -1,6 +1,6 @@
 package com.linneakarlsson.budget_app_enterpise.dto;
 
-import com.linneakarlsson.budget_app_enterpise.model.TransactionType;
+import com.linneakarlsson.budget_app_enterpise.model.transaction.TransactionType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 

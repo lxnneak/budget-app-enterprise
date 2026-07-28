@@ -1,11 +1,13 @@
-package com.linneakarlsson.budget_app_enterpise.model;
+package com.linneakarlsson.budget_app_enterpise.model.transaction;
 
+import com.linneakarlsson.budget_app_enterpise.model.customUser.CustomUser;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 @Table(name = "transactions")
@@ -13,7 +15,7 @@ public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -50,7 +52,7 @@ public class Transaction {
         this.user = user;
     }
 
-    public Long getId() { return id; }
+    public UUID getId() { return id; }
 
     public TransactionType getType() { return type; }
     public void setType(TransactionType type) { this.type = type; }

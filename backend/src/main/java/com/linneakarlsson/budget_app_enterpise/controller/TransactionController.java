@@ -2,8 +2,8 @@ package com.linneakarlsson.budget_app_enterpise.controller;
 
 import com.linneakarlsson.budget_app_enterpise.dto.TransactionRequestDTO;
 import com.linneakarlsson.budget_app_enterpise.dto.TransactionResponseDTO;
-import com.linneakarlsson.budget_app_enterpise.model.CustomUser;
-import com.linneakarlsson.budget_app_enterpise.model.TransactionType;
+import com.linneakarlsson.budget_app_enterpise.model.customUser.CustomUser;
+import com.linneakarlsson.budget_app_enterpise.model.transaction.TransactionType;
 import com.linneakarlsson.budget_app_enterpise.service.AuthenticationService;
 import com.linneakarlsson.budget_app_enterpise.service.TransactionService;
 import jakarta.validation.Valid;
@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/transactions")
@@ -39,7 +40,7 @@ public class TransactionController {
 
     @GetMapping("/{id}")
     public TransactionResponseDTO getById(
-            @PathVariable Long id,
+            @PathVariable UUID id,
             @RequestHeader String email,
             @RequestHeader String password) {
         CustomUser user = authenticationService.authenticateOrThrow(email, password);
@@ -77,7 +78,7 @@ public class TransactionController {
 
     @PutMapping("/{id}")
     public TransactionResponseDTO update(
-            @PathVariable Long id,
+            @PathVariable UUID id,
             @Valid @RequestBody TransactionRequestDTO request,
             @RequestHeader String email,
             @RequestHeader String password) {
@@ -88,7 +89,7 @@ public class TransactionController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(
-            @PathVariable Long id,
+            @PathVariable UUID id,
             @RequestHeader String email,
             @RequestHeader String password) {
         CustomUser user = authenticationService.authenticateOrThrow(email, password);

@@ -3,14 +3,16 @@ package com.linneakarlsson.budget_app_enterpise.service;
 import com.linneakarlsson.budget_app_enterpise.dto.CustomUserPatchDTO;
 import com.linneakarlsson.budget_app_enterpise.dto.CustomUserRequestDTO;
 import com.linneakarlsson.budget_app_enterpise.dto.CustomUserResponseDTO;
-import com.linneakarlsson.budget_app_enterpise.model.CustomUser;
-import com.linneakarlsson.budget_app_enterpise.model.Role;
+import com.linneakarlsson.budget_app_enterpise.model.customUser.CustomUser;
+import com.linneakarlsson.budget_app_enterpise.model.customUser.authority.UserRole;
 import com.linneakarlsson.budget_app_enterpise.repository.CustomUserRepository;
 import com.linneakarlsson.budget_app_enterpise.util.PasswordUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class CustomUserService {
@@ -21,6 +23,8 @@ public class CustomUserService {
         this.customUserRepository = customUserRepository;
     }
 
+    // TODO - set booleans?
+
     public CustomUser createUser(CustomUserRequestDTO dto) {
         if (customUserRepository.existsByEmail(dto.email())) {
             throw new IllegalArgumentException("Email already exists");
@@ -28,7 +32,7 @@ public class CustomUserService {
         CustomUser user = new CustomUser();
         user.setEmail(dto.email());
         user.setPassword(PasswordUtil.hashPassword(dto.password()));
-        user.setRole(Role.USER);
+        user.setRoles(Set.of(UserRole.USER));
         return customUserRepository.save(user);
     }
 
@@ -39,11 +43,11 @@ public class CustomUserService {
         CustomUser user = new CustomUser();
         user.setEmail(dto.email());
         user.setPassword(PasswordUtil.hashPassword(dto.password()));
-        user.setRole(Role.ADMIN);
+        user.setRoles(Set.of(UserRole.ADMIN));
         return customUserRepository.save(user);
     }
 
-    public CustomUser updateUser(CustomUserPatchDTO dto, Long userId) {
+    public CustomUser updateUser(CustomUserPatchDTO dto, UUID userId) {
         CustomUser user = customUserRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));
         if (dto.email() != null) {
@@ -58,7 +62,7 @@ public class CustomUserService {
         return customUserRepository.save(user);
     }
 
-    public void deleteUser(Long userId) {
+    public void deleteUser(UUID userId) {
         if (!customUserRepository.existsById(userId)) {
             throw new NoSuchElementException("User with id " + userId + " not found");
         }
@@ -67,7 +71,7 @@ public class CustomUserService {
 
     public List<CustomUserResponseDTO> getAllUsers() {
         return customUserRepository.findAll().stream()
-                .map(user -> new CustomUserResponseDTO(user.getId(), user.getEmail(), user.getRole()))
+                .map(user -> new CustomUserResponseDTO(user.getId(), user.getEmail(), user.getRoles()))
                 .toList();
     }
 }
