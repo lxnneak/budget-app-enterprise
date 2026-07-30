@@ -1,5 +1,6 @@
 package com.linneakarlsson.budget_app_enterpise.model.customUser;
 
+import jakarta.annotation.Nonnull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,7 +34,12 @@ public class CustomUserDetails implements UserDetails {
         return customUser.getPassword();
     }
 
+    @Nonnull
     @Override
+    public String getUsername() {
+        return customUser.getEmail();
+    }
+
     public String getEmail() {
         return customUser.getEmail();
     }

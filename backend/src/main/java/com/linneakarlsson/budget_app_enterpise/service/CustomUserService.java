@@ -6,7 +6,8 @@ import com.linneakarlsson.budget_app_enterpise.dto.CustomUserResponseDTO;
 import com.linneakarlsson.budget_app_enterpise.model.customUser.CustomUser;
 import com.linneakarlsson.budget_app_enterpise.model.customUser.authority.UserRole;
 import com.linneakarlsson.budget_app_enterpise.repository.CustomUserRepository;
-import com.linneakarlsson.budget_app_enterpise.util.PasswordUtil;
+import com.linneakarlsson.budget_app_enterpise.config.AppPasswordConfig;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,12 +19,12 @@ import java.util.UUID;
 public class CustomUserService {
 
     private final CustomUserRepository customUserRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public CustomUserService(CustomUserRepository customUserRepository) {
+    public CustomUserService(CustomUserRepository customUserRepository, PasswordEncoder passwordEncoder) {
         this.customUserRepository = customUserRepository;
+        this.passwordEncoder = passwordEncoder;
     }
-
-    // TODO - set booleans?
 
     public CustomUser createUser(CustomUserRequestDTO dto) {
         if (customUserRepository.existsByEmail(dto.email())) {
@@ -31,7 +32,7 @@ public class CustomUserService {
         }
         CustomUser user = new CustomUser();
         user.setEmail(dto.email());
-        user.setPassword(PasswordUtil.hashPassword(dto.password()));
+        user.setPassword(passwordEncoder.encode(dto.password()));
         user.setRoles(Set.of(UserRole.USER));
         return customUserRepository.save(user);
     }
@@ -42,7 +43,7 @@ public class CustomUserService {
         }
         CustomUser user = new CustomUser();
         user.setEmail(dto.email());
-        user.setPassword(PasswordUtil.hashPassword(dto.password()));
+        user.setPassword(passwordEncoder.encode(dto.password()));
         user.setRoles(Set.of(UserRole.ADMIN));
         return customUserRepository.save(user);
     }
@@ -57,7 +58,7 @@ public class CustomUserService {
             user.setEmail(dto.email());
         }
         if (dto.password() != null) {
-            user.setPassword(PasswordUtil.hashPassword(dto.password()));
+            user.setPassword(passwordEncoder.encode(dto.password()));
         }
         return customUserRepository.save(user);
     }

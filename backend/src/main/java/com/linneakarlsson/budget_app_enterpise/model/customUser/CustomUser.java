@@ -34,10 +34,10 @@ public class CustomUser {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions;
 
-    private boolean isAccountNonExpired;
-    private boolean isAccountNonLocked;
-    private boolean isCredentialsNonExpired;
-    private boolean isEnabled;
+    private boolean isAccountNonExpired = true;
+    private boolean isAccountNonLocked = true;
+    private boolean isCredentialsNonExpired = true;
+    private boolean isEnabled = true;
 
     public CustomUser() {}
 
