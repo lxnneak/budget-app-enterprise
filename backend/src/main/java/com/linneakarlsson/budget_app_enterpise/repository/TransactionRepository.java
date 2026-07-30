@@ -13,7 +13,7 @@ import java.util.UUID;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, UUID> {
 
-    List<Transaction> findByUserOrderByDateDesc(CustomUser user);
+    List<Transaction> findByUserIdOrderByDateDesc(UUID userId);
 
     List<Transaction> findByUserAndType(CustomUser user, TransactionType type);
 

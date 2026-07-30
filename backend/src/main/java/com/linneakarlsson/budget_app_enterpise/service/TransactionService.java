@@ -23,8 +23,8 @@ public class TransactionService {
         this.repository = repository;
     }
 
-    public List<TransactionResponseDTO> getAll(CustomUser user) {
-        return repository.findByUserOrderByDateDesc(user).stream().map(t -> TransactionResponseDTO.toDTO(t)).toList();
+    public List<TransactionResponseDTO> getAll(UUID userId) {
+        return repository.findByUserIdOrderByDateDesc(userId).stream().map(t -> TransactionResponseDTO.toDTO(t)).toList();
     }
 
     public TransactionResponseDTO getById(UUID id, CustomUser user) {

@@ -24,7 +24,6 @@ public class CustomUser {
     @Column(name = "password", nullable = false)
     private String password;
 
-    // Sparar en mängd av roller i en separat kopplingstabell (users_roles)
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)

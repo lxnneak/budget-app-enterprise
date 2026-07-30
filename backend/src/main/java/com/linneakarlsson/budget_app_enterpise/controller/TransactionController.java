@@ -3,13 +3,14 @@ package com.linneakarlsson.budget_app_enterpise.controller;
 import com.linneakarlsson.budget_app_enterpise.dto.TransactionRequestDTO;
 import com.linneakarlsson.budget_app_enterpise.dto.TransactionResponseDTO;
 import com.linneakarlsson.budget_app_enterpise.model.customUser.CustomUser;
+import com.linneakarlsson.budget_app_enterpise.model.customUser.CustomUserDetails;
 import com.linneakarlsson.budget_app_enterpise.model.transaction.TransactionType;
-import com.linneakarlsson.budget_app_enterpise.service.AuthenticationService;
 import com.linneakarlsson.budget_app_enterpise.service.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -23,36 +24,32 @@ import java.util.UUID;
 public class TransactionController {
 
     private final TransactionService service;
-    private final AuthenticationService authenticationService;
 
-    public TransactionController(TransactionService service, AuthenticationService authenticationService) {
+    public TransactionController(TransactionService service) {
         this.service = service;
-        this.authenticationService = authenticationService;
     }
 
     @GetMapping
-    public List<TransactionResponseDTO> getAll(
-            @RequestHeader String email,
-            @RequestHeader String password) {
-        CustomUser user = authenticationService.authenticateOrThrow(email, password);
-        return service.getAll(user);
+    public List<TransactionResponseDTO> getAll(Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        return service.getAll(userDetails.getCustomUser().getId());
     }
 
     @GetMapping("/{id}")
     public TransactionResponseDTO getById(
             @PathVariable UUID id,
-            @RequestHeader String email,
-            @RequestHeader String password) {
-        CustomUser user = authenticationService.authenticateOrThrow(email, password);
+            Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        CustomUser user = userDetails.getCustomUser();
         return service.getById(id, user);
     }
 
     @GetMapping("/type/{type}")
     public List<TransactionResponseDTO> getByType(
             @PathVariable TransactionType type,
-            @RequestHeader String email,
-            @RequestHeader String password) {
-        CustomUser user = authenticationService.authenticateOrThrow(email, password);
+            Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        CustomUser user = userDetails.getCustomUser();
         return service.getByType(type, user);
     }
 
@@ -60,9 +57,9 @@ public class TransactionController {
     public List<TransactionResponseDTO> getByDateRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
-            @RequestHeader String email,
-            @RequestHeader String password) {
-        CustomUser user = authenticationService.authenticateOrThrow(email, password);
+            Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        CustomUser user = userDetails.getCustomUser();
         return service.getByDateRange(from, to, user);
     }
 
@@ -70,9 +67,9 @@ public class TransactionController {
     @ResponseStatus(HttpStatus.CREATED)
     public TransactionResponseDTO create(
             @Valid @RequestBody TransactionRequestDTO request,
-            @RequestHeader String email,
-            @RequestHeader String password) {
-        CustomUser user = authenticationService.authenticateOrThrow(email, password);
+            Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        CustomUser user = userDetails.getCustomUser();
         return service.create(request, user);
     }
 
@@ -80,9 +77,9 @@ public class TransactionController {
     public TransactionResponseDTO update(
             @PathVariable UUID id,
             @Valid @RequestBody TransactionRequestDTO request,
-            @RequestHeader String email,
-            @RequestHeader String password) {
-        CustomUser user = authenticationService.authenticateOrThrow(email, password);
+            Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        CustomUser user = userDetails.getCustomUser();
         return service.update(id, request, user);
     }
 
@@ -90,26 +87,26 @@ public class TransactionController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(
             @PathVariable UUID id,
-            @RequestHeader String email,
-            @RequestHeader String password) {
-        CustomUser user = authenticationService.authenticateOrThrow(email, password);
+            Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        CustomUser user = userDetails.getCustomUser();
         service.delete(id, user);
     }
 
     @GetMapping("/balance")
     public BigDecimal getBalance(
-            @RequestHeader String email,
-            @RequestHeader String password) {
-        CustomUser user = authenticationService.authenticateOrThrow(email, password);
+            Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        CustomUser user = userDetails.getCustomUser();
         return service.getBalance(user);
     }
 
     @GetMapping("/category/{category}")
     public List<TransactionResponseDTO> getByCategory(
             @PathVariable String category,
-            @RequestHeader String email,
-            @RequestHeader String password) {
-        CustomUser user = authenticationService.authenticateOrThrow(email, password);
+            Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        CustomUser user = userDetails.getCustomUser();
         return service.getByCategory(category, user);
     }
 

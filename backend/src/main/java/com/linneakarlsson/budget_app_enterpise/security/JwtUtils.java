@@ -40,7 +40,7 @@ public class JwtUtils {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateJwtToken(UserDetails userDetails) { // TODO - CustomUserDetails
+    public String generateJwtToken(UserDetails userDetails) {
         logger.debug("Generating JWT for user: {} with roles: {}", userDetails.getUsername(), userDetails.getAuthorities());
 
         List<String> roles = userDetails.getAuthorities().stream().map(
