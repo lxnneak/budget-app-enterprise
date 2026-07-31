@@ -2,7 +2,6 @@ package com.linneakarlsson.budget_app_enterpise.controller;
 
 import com.linneakarlsson.budget_app_enterpise.dto.TransactionRequestDTO;
 import com.linneakarlsson.budget_app_enterpise.dto.TransactionResponseDTO;
-import com.linneakarlsson.budget_app_enterpise.model.customUser.CustomUser;
 import com.linneakarlsson.budget_app_enterpise.model.customUser.CustomUserDetails;
 import com.linneakarlsson.budget_app_enterpise.model.transaction.TransactionType;
 import com.linneakarlsson.budget_app_enterpise.service.TransactionService;
@@ -28,84 +27,79 @@ public class TransactionController {
         this.service = service;
     }
 
-    @GetMapping
-    public List<TransactionResponseDTO> getAll(Authentication authentication) {
+    private UUID getUserId(Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        return service.getAll(userDetails.getCustomUser().getId());
+        return userDetails.getCustomUser().getId();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<TransactionResponseDTO>> getAll(Authentication authentication) {
+        List<TransactionResponseDTO> transactions = service.getAll(getUserId(authentication));
+        return ResponseEntity.ok(transactions);
     }
 
     @GetMapping("/{id}")
-    public TransactionResponseDTO getById(
+    public ResponseEntity<TransactionResponseDTO> getById(
             @PathVariable UUID id,
             Authentication authentication) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        CustomUser user = userDetails.getCustomUser();
-        return service.getById(id, user);
+        TransactionResponseDTO transaction = service.getById(id, getUserId(authentication));
+        return ResponseEntity.ok(transaction);
     }
 
     @GetMapping("/type/{type}")
-    public List<TransactionResponseDTO> getByType(
+    public ResponseEntity<List<TransactionResponseDTO>> getByType(
             @PathVariable TransactionType type,
             Authentication authentication) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        CustomUser user = userDetails.getCustomUser();
-        return service.getByType(type, user);
+        List<TransactionResponseDTO> transactions = service.getByType(type, getUserId(authentication));
+        return ResponseEntity.ok(transactions);
     }
 
     @GetMapping("/range")
-    public List<TransactionResponseDTO> getByDateRange(
+    public ResponseEntity<List<TransactionResponseDTO>> getByDateRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
             Authentication authentication) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        CustomUser user = userDetails.getCustomUser();
-        return service.getByDateRange(from, to, user);
+        List<TransactionResponseDTO> transactions = service.getByDateRange(from, to, getUserId(authentication));
+        return ResponseEntity.ok(transactions);
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public TransactionResponseDTO create(
+    public ResponseEntity<TransactionResponseDTO> create(
             @Valid @RequestBody TransactionRequestDTO request,
             Authentication authentication) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        CustomUser user = userDetails.getCustomUser();
-        return service.create(request, user);
+        TransactionResponseDTO createdTransaction = service.create(request, getUserId(authentication));
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdTransaction);
     }
 
     @PutMapping("/{id}")
-    public TransactionResponseDTO update(
+    public ResponseEntity<TransactionResponseDTO> update(
             @PathVariable UUID id,
             @Valid @RequestBody TransactionRequestDTO request,
             Authentication authentication) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        CustomUser user = userDetails.getCustomUser();
-        return service.update(id, request, user);
+        TransactionResponseDTO updatedTransaction = service.update(id, request, getUserId(authentication));
+        return ResponseEntity.ok(updatedTransaction);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(
+    public ResponseEntity<Void> delete(
             @PathVariable UUID id,
             Authentication authentication) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        CustomUser user = userDetails.getCustomUser();
-        service.delete(id, user);
+        service.delete(id, getUserId(authentication));
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/balance")
-    public BigDecimal getBalance(
+    public ResponseEntity<BigDecimal> getBalance(
             Authentication authentication) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        CustomUser user = userDetails.getCustomUser();
-        return service.getBalance(user);
+        BigDecimal balance = service.getBalance(getUserId(authentication));
+        return ResponseEntity.ok(balance);
     }
 
     @GetMapping("/category/{category}")
-    public List<TransactionResponseDTO> getByCategory(
+    public ResponseEntity<List<TransactionResponseDTO>> getByCategory(
             @PathVariable String category,
             Authentication authentication) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        CustomUser user = userDetails.getCustomUser();
-        return service.getByCategory(category, user);
+        List<TransactionResponseDTO> transactions = service.getByCategory(category, getUserId(authentication));
+        return ResponseEntity.ok(transactions);
     }
 }
