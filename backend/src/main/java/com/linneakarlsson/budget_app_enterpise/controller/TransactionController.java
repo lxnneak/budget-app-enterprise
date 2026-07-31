@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @RestController
@@ -108,10 +107,5 @@ public class TransactionController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         CustomUser user = userDetails.getCustomUser();
         return service.getByCategory(category, user);
-    }
-
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<String> handleNotFound(NoSuchElementException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 }

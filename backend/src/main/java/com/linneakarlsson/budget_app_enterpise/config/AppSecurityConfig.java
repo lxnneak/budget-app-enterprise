@@ -36,7 +36,6 @@ public class AppSecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        // TODO - update?
                         .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
