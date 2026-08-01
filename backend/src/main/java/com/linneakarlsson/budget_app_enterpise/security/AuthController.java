@@ -67,7 +67,7 @@ public class AuthController {
 
         Cookie cookie = new Cookie("authToken", token);
         cookie.setHttpOnly(true);
-        cookie.setSecure(false); // TODO - true if prod
+        cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setMaxAge(3600);
         response.addCookie(cookie);
@@ -85,7 +85,7 @@ public class AuthController {
     public ResponseEntity<?> logoutUser(HttpServletResponse response) {
         Cookie cookie = new Cookie("authToken", null);
         cookie.setHttpOnly(true);
-        cookie.setSecure(false); // TODO - true if prod
+        cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setMaxAge(0);
         response.addCookie(cookie);

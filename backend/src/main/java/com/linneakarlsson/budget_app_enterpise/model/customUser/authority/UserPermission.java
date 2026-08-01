@@ -1,8 +1,6 @@
 package com.linneakarlsson.budget_app_enterpise.model.customUser.authority;
 
 public enum UserPermission {
-
-    // TODO - update?
     READ("READ"),
     WRITE("WRITE"),
     DELETE("DELETE");
